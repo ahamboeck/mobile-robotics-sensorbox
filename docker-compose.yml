@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  livox_driver:
+    build:
+      context: .
+      dockerfile: Dockerfile.remote
+    image: mobile-robotics-sensorbox:latest
+    container_name: sensorbox/livox_driver
+    network_mode: host
+    ipc: host
+    # environment:
+    #   - DISPLAY=${DISPLAY}
+    volumes:
+      - ./src:/opt/ros2_ws/src
+      - ./app:/app
+      - ./lab:/root/.jupyter/lab
+    #  - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    devices:
+      - /dev/dri:/dev/dri
+    # Uncomment below for NVIDIA GPU support:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+    privileged: true  
+    # stdin_open: true
+    # tty: true
+    command: ros2 launch livox_ros_driver2 msg_MID360_launch.py
+
+  livox_lio:
+    build:
+      context: .
+      dockerfile: Dockerfile.remote
+    image: mobile-robotics-sensorbox:latest
+    container_name: sensorbox/livox_lio
+    network_mode: host
+    ipc: host
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - ./src:/opt/ros2_ws/src
+      - ./app:/app
+      - ./lab:/root/.jupyter/lab
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    devices:
+      - /dev/dri:/dev/dri
+    # Uncomment below for NVIDIA GPU support:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+    privileged: true  
+    # stdin_open: true
+    # tty: true
+    command: ros2 launch fast_lio mapping.launch.py config_file:=mid360.yaml
+
+  oak_driver:
+    build:
+      context: .
+      dockerfile: Dockerfile.remote
+    image: mobile-robotics-sensorbox:latest
+    container_name: sensorbox/oak_driver
+    network_mode: host
+    ipc: host
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - ./src:/opt/ros2_ws/src
+      - ./app:/app
+      - ./lab:/root/.jupyter/lab
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/bus/usb:/dev/bus/usb
+    # Uncomment below for NVIDIA GPU support:
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+    privileged: true  
+    # stdin_open: true
+    # tty: true
+    command: ros2 launch depthai_ros_driver camera.launch.py
