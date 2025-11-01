@@ -13,10 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libvulkan1 libxcb-randr0 mesa-vulkan-drivers \
     ros-${ROS_DISTRO}-depthai-ros
 
-RUN rm requirements.txt
-ADD ./.github/workflows/requirements.txt .
 RUN /bin/bash -c "source ~/myenv/bin/activate \
-    && pip3 install -r requirements.txt"
+    && pip3 install numpy"
 
 RUN git clone https://github.com/Livox-SDK/Livox-SDK2.git
 
