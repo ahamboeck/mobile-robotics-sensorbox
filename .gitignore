@@ -3,3 +3,7 @@ lab/
 requirements.txt
 .vscode/
 legacy/
+dataset/
+*.db3
+*.pcd
+*.png
