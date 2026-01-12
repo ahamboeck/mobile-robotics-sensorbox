@@ -1,16 +1,23 @@
 # CHANGE to ros2_humble_opensource_arm FOR ARM64; change to ros2_humble_opensource for x86_64
 FROM ghcr.io/simonschwaiger/mobile-robotics-sensorbox:ros2_humble_opensource
-
+ 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-$ROS_DISTRO-rviz2
+ 
 # Replace precompiled source folder with local source folder
 RUN rm -rf $ROS2_WS/src
 COPY ./src/ $ROS2_WS/src/
-
+ 
 # Compile for local changes to take effect
 ARG ROS_DISTRO
 RUN /bin/bash -c "source /opt/ros/$ROS_DISTRO/setup.bash && cd $ROS2_WS; \
     if [ '$ROS_DISTRO' = 'noetic' ]; then \
     catkin_make; else \
     colcon build --symlink-install; fi"
-
+ 
 # Remove src folder used for compilation, since the real src folder will be mounted at runtime
 RUN rm -rf $ROS2_WS/src
+ 
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]

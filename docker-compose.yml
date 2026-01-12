@@ -46,9 +46,11 @@ services:
       - ./app:/app
       - ./dataset:/dataset
       - ./lab:/root/.jupyter/lab
+      - ./config:/config
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
     devices:
       - /dev/dri:/dev/dri
+      - /dev:/dev
     # Uncomment below for NVIDIA GPU support:
     deploy:
       resources:
